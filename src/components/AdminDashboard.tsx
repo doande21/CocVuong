@@ -120,7 +120,7 @@ export default function AdminDashboard({ performances, matches, settings, onBack
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-right mr-4">
-                      <p className="text-xs text-slate-500 uppercase">Điểm TB</p>
+                      <p className="text-[10px] text-slate-500 uppercase font-bold">{Object.keys(p.scores).length} giám khảo</p>
                       <p className="text-xl font-mono font-bold text-blue-400">{p.averageScore.toFixed(2)}</p>
                     </div>
                     <button 

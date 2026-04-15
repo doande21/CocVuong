@@ -28,8 +28,14 @@ export default function MentorDashboard({ performances, settings, user, onBack }
   const submitScore = async () => {
     if (!activePerformance || score === '' || score < 0 || score > 10) return;
 
-    const newScores = { ...activePerformance.scores, [user.uid]: Number(score) };
-    const scoreValues = Object.values(newScores);
+    const newScores = { 
+      ...activePerformance.scores, 
+      [user.uid]: { 
+        score: Number(score), 
+        name: user.displayName || 'Giám khảo' 
+      } 
+    };
+    const scoreValues = Object.values(newScores).map(s => s.score);
     const average = scoreValues.reduce((a, b) => a + b, 0) / scoreValues.length;
 
     await updateDoc(doc(db, 'performances', activePerformance.id), {

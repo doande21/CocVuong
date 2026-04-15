@@ -55,17 +55,19 @@ export default function PublicDisplay({ performances, matches, settings, onBack 
                   </p>
                 </motion.div>
 
-                <div className="grid grid-cols-5 gap-4">
-                  {Object.entries(activePerformance.scores).map(([judgeId, score], idx) => (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                  {Object.entries(activePerformance.scores).map(([judgeId, scoreData], idx) => (
                     <motion.div 
                       key={judgeId}
                       initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ delay: idx * 0.1 }}
-                      className="bg-white/5 border border-white/10 p-6 rounded-3xl text-center backdrop-blur-md"
+                      className="bg-white/5 border border-white/10 p-4 rounded-3xl text-center backdrop-blur-md"
                     >
-                      <p className="text-xs text-slate-500 uppercase font-bold mb-2">GK {idx + 1}</p>
-                      <p className="text-5xl font-black text-blue-400">{score.toFixed(1)}</p>
+                      <p className="text-[10px] text-slate-500 uppercase font-bold mb-1 truncate px-2">
+                        {scoreData.name}
+                      </p>
+                      <p className="text-4xl font-black text-blue-400">{scoreData.score.toFixed(1)}</p>
                     </motion.div>
                   ))}
                 </div>

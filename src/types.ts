@@ -2,11 +2,16 @@ export type PerformanceStatus = 'pending' | 'active' | 'completed';
 export type MatchStatus = 'pending' | 'active' | 'completed';
 export type ActiveView = 'forms' | 'combat' | 'idle';
 
+export interface JudgeScore {
+  score: number;
+  name: string;
+}
+
 export interface Performance {
   id: string;
   name: string;
   competitor: string;
-  scores: Record<string, number>;
+  scores: Record<string, JudgeScore>;
   averageScore: number;
   status: PerformanceStatus;
   order: number;
