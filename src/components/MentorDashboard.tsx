@@ -80,7 +80,7 @@ export default function MentorDashboard({ performances, settings, user, onBack }
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-green-400 mb-2">Đã gửi điểm thành công!</h2>
               <p className="text-slate-400">Điểm của bạn: <span className="text-white font-bold">{score}</span></p>
-              <p className="mt-4 text-sm text-slate-500 italic">Vui lòng chờ tiết mục tiếp theo</p>
+              <p className="mt-4 text-sm text-slate-500">Vui lòng chờ tiết mục tiếp theo</p>
             </motion.div>
           ) : (
             <motion.div 

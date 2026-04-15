@@ -22,10 +22,12 @@ export interface Match {
   redCorner: {
     name: string;
     photoUrl: string;
+    celebrationPhotoUrl: string;
   };
   blueCorner: {
     name: string;
     photoUrl: string;
+    celebrationPhotoUrl: string;
   };
   winner: 'red' | 'blue' | null;
   status: MatchStatus;

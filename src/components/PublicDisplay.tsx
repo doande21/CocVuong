@@ -82,7 +82,7 @@ export default function PublicDisplay({ performances, matches, settings, onBack 
                       <p className="text-xl text-blue-200 font-bold uppercase tracking-widest">Điểm trung bình</p>
                       <p className="text-2xl text-blue-100 opacity-60">Average Score</p>
                     </div>
-                    <p className="text-9xl font-black italic tracking-tighter">
+                    <p className="text-9xl font-black tracking-tighter">
                       {activePerformance.averageScore.toFixed(2)}
                     </p>
                   </div>
@@ -127,55 +127,75 @@ export default function PublicDisplay({ performances, matches, settings, onBack 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="h-screen flex flex-col"
+            className="h-screen relative overflow-hidden bg-black"
           >
-            <div className="flex-1 flex items-stretch">
-              {/* Red Corner */}
-              <div className="flex-1 bg-gradient-to-br from-red-950 to-red-900 flex flex-col items-center justify-center p-12 relative overflow-hidden">
+            {/* UFC Style Combat Display */}
+            <div className="flex h-full">
+              {/* Red Corner Fighter */}
+              <div className="relative flex-1 overflow-hidden">
                 <motion.div 
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className={`relative z-10 text-center ${activeMatch.winner === 'red' && settings.showWinnerAnimation ? 'scale-110' : ''}`}
+                  initial={{ x: -100, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  className="h-full w-full"
                 >
-                  <div className="w-80 h-80 rounded-full border-[12px] border-red-500 overflow-hidden mb-8 shadow-2xl shadow-red-500/50 mx-auto">
-                    <img src={activeMatch.redCorner.photoUrl} alt="" className="w-full h-full object-cover" />
-                  </div>
-                  <h2 className="text-7xl font-black mb-2 tracking-tighter uppercase">{activeMatch.redCorner.name}</h2>
-                  <p className="text-3xl text-red-300 font-bold uppercase tracking-[0.5em]">ĐỎ / RED</p>
+                  <img 
+                    src={activeMatch.redCorner.photoUrl} 
+                    alt="" 
+                    className="h-full w-full object-cover object-center scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-950/80 via-red-900/40 to-transparent" />
                 </motion.div>
                 
-                {activeMatch.winner === 'red' && settings.showWinnerAnimation && (
-                  <WinnerOverlay name={activeMatch.redCorner.name} />
-                )}
-              </div>
-
-              {/* VS Divider */}
-              <div className="w-32 bg-black flex items-center justify-center relative z-20">
-                <div className="h-full w-px bg-white/20 absolute left-1/2 -translate-x-1/2" />
-                <div className="bg-black px-4 py-8 relative z-30">
-                  <span className="text-7xl font-black italic tracking-tighter text-white/20">VS</span>
+                {/* Red Label */}
+                <div className="absolute bottom-12 left-12 z-20">
+                  <p className="text-4xl font-black text-red-500 tracking-[0.2em] mb-2">ĐỎ / RED</p>
+                  <h2 className="text-8xl font-black text-white uppercase leading-none tracking-tighter">{activeMatch.redCorner.name}</h2>
                 </div>
               </div>
 
-              {/* Blue Corner */}
-              <div className="flex-1 bg-gradient-to-bl from-blue-950 to-blue-900 flex flex-col items-center justify-center p-12 relative overflow-hidden">
+              {/* Center VS and Names Overlay */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center z-30 pointer-events-none">
+                <div className="bg-black/40 backdrop-blur-sm px-12 py-6 border-y border-white/10 flex flex-col items-center">
+                  <span className="text-9xl font-black text-white tracking-tighter leading-none mb-4">
+                    {activeMatch.redCorner.name.split(' ').pop()}
+                  </span>
+                  <span className="text-4xl font-black text-yellow-500 border-2 border-yellow-500 px-4 py-1 mb-4">VS</span>
+                  <span className="text-9xl font-black text-white tracking-tighter leading-none">
+                    {activeMatch.blueCorner.name.split(' ').pop()}
+                  </span>
+                </div>
+              </div>
+
+              {/* Blue Corner Fighter */}
+              <div className="relative flex-1 overflow-hidden">
                 <motion.div 
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className={`relative z-10 text-center ${activeMatch.winner === 'blue' && settings.showWinnerAnimation ? 'scale-110' : ''}`}
+                  initial={{ x: 100, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  className="h-full w-full"
                 >
-                  <div className="w-80 h-80 rounded-full border-[12px] border-blue-500 overflow-hidden mb-8 shadow-2xl shadow-blue-500/50 mx-auto">
-                    <img src={activeMatch.blueCorner.photoUrl} alt="" className="w-full h-full object-cover" />
-                  </div>
-                  <h2 className="text-7xl font-black mb-2 tracking-tighter uppercase">{activeMatch.blueCorner.name}</h2>
-                  <p className="text-3xl text-blue-300 font-bold uppercase tracking-[0.5em]">XANH / BLUE</p>
+                  <img 
+                    src={activeMatch.blueCorner.photoUrl} 
+                    alt="" 
+                    className="h-full w-full object-cover object-center scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-l from-blue-950/80 via-blue-900/40 to-transparent" />
                 </motion.div>
 
-                {activeMatch.winner === 'blue' && settings.showWinnerAnimation && (
-                  <WinnerOverlay name={activeMatch.blueCorner.name} />
-                )}
+                {/* Blue Label */}
+                <div className="absolute bottom-12 right-12 z-20 text-right">
+                  <p className="text-4xl font-black text-blue-500 tracking-[0.2em] mb-2">XANH / BLUE</p>
+                  <h2 className="text-8xl font-black text-white uppercase leading-none tracking-tighter">{activeMatch.blueCorner.name}</h2>
+                </div>
               </div>
             </div>
+
+            {/* Winner Overlays */}
+            {activeMatch.winner === 'red' && settings.showWinnerAnimation && (
+              <WinnerOverlay name={activeMatch.redCorner.name} photoUrl={activeMatch.redCorner.celebrationPhotoUrl} />
+            )}
+            {activeMatch.winner === 'blue' && settings.showWinnerAnimation && (
+              <WinnerOverlay name={activeMatch.blueCorner.name} photoUrl={activeMatch.blueCorner.celebrationPhotoUrl} />
+            )}
           </motion.div>
         )}
 
@@ -204,24 +224,50 @@ export default function PublicDisplay({ performances, matches, settings, onBack 
   );
 }
 
-function WinnerOverlay({ name }: { name: string }) {
+function WinnerOverlay({ name, photoUrl }: { name: string; photoUrl: string }) {
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="absolute inset-0 z-40 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center"
+      className="absolute inset-0 z-40 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center overflow-hidden"
     >
-      <motion.div
-        initial={{ scale: 0.5, y: 50 }}
-        animate={{ scale: 1, y: 0 }}
-        className="text-center"
+      {/* Background Celebration Photo */}
+      <motion.div 
+        initial={{ scale: 1.2, opacity: 0 }}
+        animate={{ scale: 1, opacity: 0.4 }}
+        className="absolute inset-0 z-0"
       >
-        <Trophy className="w-32 h-32 text-yellow-500 mx-auto mb-8 animate-bounce" />
-        <h3 className="text-6xl font-black text-white mb-4 uppercase tracking-widest">CHÚC MỪNG</h3>
-        <h2 className="text-9xl font-black text-yellow-500 drop-shadow-[0_0_30px_rgba(234,179,8,0.5)] uppercase tracking-tighter">
-          {name}
-        </h2>
-        <p className="text-4xl text-white/60 mt-8 font-bold uppercase tracking-[1em]">CHIẾN THẮNG</p>
+        <img src={photoUrl} alt="" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
+      </motion.div>
+
+      <motion.div
+        initial={{ scale: 0.5, y: 50, opacity: 0 }}
+        animate={{ scale: 1, y: 0, opacity: 1 }}
+        className="text-center relative z-10"
+      >
+        <div className="relative inline-block mb-8">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 bg-yellow-500/20 blur-3xl rounded-full"
+          />
+          <Trophy className="w-32 h-32 text-yellow-500 mx-auto relative z-10 animate-bounce" />
+        </div>
+        
+        <h3 className="text-6xl font-black text-white mb-4 uppercase tracking-[0.2em]">CHÚC MỪNG</h3>
+        
+        <div className="relative mb-8">
+          <h2 className="text-[12vw] font-black text-yellow-500 drop-shadow-[0_0_50px_rgba(234,179,8,0.8)] uppercase leading-none tracking-tighter">
+            {name}
+          </h2>
+        </div>
+
+        <div className="flex items-center justify-center gap-8">
+          <div className="h-px w-32 bg-gradient-to-r from-transparent to-white/50" />
+          <p className="text-5xl text-white font-black uppercase tracking-[0.5em]">CHIẾN THẮNG</p>
+          <div className="h-px w-32 bg-gradient-to-l from-transparent to-white/50" />
+        </div>
       </motion.div>
       
       {/* Confetti-like elements */}

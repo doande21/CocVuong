@@ -15,7 +15,14 @@ interface AdminDashboardProps {
 export default function AdminDashboard({ performances, matches, settings, onBack }: AdminDashboardProps) {
   const [activeTab, setActiveTab] = useState<'forms' | 'combat' | 'settings'>('forms');
   const [newPerf, setNewPerf] = useState({ name: '', competitor: '' });
-  const [newMatch, setNewMatch] = useState({ redName: '', blueName: '', redPhoto: '', bluePhoto: '' });
+  const [newMatch, setNewMatch] = useState({ 
+    redName: '', 
+    blueName: '', 
+    redPhoto: '', 
+    bluePhoto: '',
+    redCelebration: '',
+    blueCelebration: ''
+  });
 
   const addPerformance = async () => {
     if (!newPerf.name || !newPerf.competitor) return;
@@ -40,17 +47,19 @@ export default function AdminDashboard({ performances, matches, settings, onBack
       await addDoc(collection(db, 'matches'), {
         redCorner: { 
           name: newMatch.redName, 
-          photoUrl: newMatch.redPhoto || `https://picsum.photos/seed/${newMatch.redName}/400` 
+          photoUrl: newMatch.redPhoto || `https://picsum.photos/seed/${newMatch.redName}/400`,
+          celebrationPhotoUrl: newMatch.redCelebration || newMatch.redPhoto || `https://picsum.photos/seed/${newMatch.redName}_win/800`
         },
         blueCorner: { 
           name: newMatch.blueName, 
-          photoUrl: newMatch.bluePhoto || `https://picsum.photos/seed/${newMatch.blueName}/400` 
+          photoUrl: newMatch.bluePhoto || `https://picsum.photos/seed/${newMatch.blueName}/400`,
+          celebrationPhotoUrl: newMatch.blueCelebration || newMatch.bluePhoto || `https://picsum.photos/seed/${newMatch.blueName}_win/800`
         },
         winner: null,
         status: 'pending',
         createdAt: new Date().toISOString()
       });
-      setNewMatch({ redName: '', blueName: '', redPhoto: '', bluePhoto: '' });
+      setNewMatch({ redName: '', blueName: '', redPhoto: '', bluePhoto: '', redCelebration: '', blueCelebration: '' });
     } catch (error) {
       console.error("Error adding match:", error);
     }
@@ -155,9 +164,15 @@ export default function AdminDashboard({ performances, matches, settings, onBack
                     className="w-full bg-slate-800 border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 outline-none"
                   />
                   <input 
-                    placeholder="URL ảnh võ sĩ Đỏ (tùy chọn)" 
+                    placeholder="URL ảnh đối mặt (Đỏ)" 
                     value={newMatch.redPhoto} 
                     onChange={e => setNewMatch({...newMatch, redPhoto: e.target.value})}
+                    className="w-full bg-slate-800 border-slate-700 rounded-lg px-4 py-2 text-xs outline-none"
+                  />
+                  <input 
+                    placeholder="URL ảnh ăn mừng (Đỏ)" 
+                    value={newMatch.redCelebration} 
+                    onChange={e => setNewMatch({...newMatch, redCelebration: e.target.value})}
                     className="w-full bg-slate-800 border-slate-700 rounded-lg px-4 py-2 text-xs outline-none"
                   />
                 </div>
@@ -169,9 +184,15 @@ export default function AdminDashboard({ performances, matches, settings, onBack
                     className="w-full bg-slate-800 border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
                   />
                   <input 
-                    placeholder="URL ảnh võ sĩ Xanh (tùy chọn)" 
+                    placeholder="URL ảnh đối mặt (Xanh)" 
                     value={newMatch.bluePhoto} 
                     onChange={e => setNewMatch({...newMatch, bluePhoto: e.target.value})}
+                    className="w-full bg-slate-800 border-slate-700 rounded-lg px-4 py-2 text-xs outline-none"
+                  />
+                  <input 
+                    placeholder="URL ảnh ăn mừng (Xanh)" 
+                    value={newMatch.blueCelebration} 
+                    onChange={e => setNewMatch({...newMatch, blueCelebration: e.target.value})}
                     className="w-full bg-slate-800 border-slate-700 rounded-lg px-4 py-2 text-xs outline-none"
                   />
                 </div>
@@ -195,7 +216,7 @@ export default function AdminDashboard({ performances, matches, settings, onBack
                         </div>
                         <p className={`font-bold ${m.winner === 'red' ? 'text-yellow-500' : ''}`}>{m.redCorner.name}</p>
                       </div>
-                      <span className="text-2xl font-black italic text-slate-700">VS</span>
+                      <span className="text-2xl font-black text-slate-700">VS</span>
                       <div 
                         className={`text-center cursor-pointer group transition-transform hover:scale-105 ${m.winner === 'blue' ? 'opacity-100' : m.winner ? 'opacity-40' : ''}`}
                         onClick={() => m.status !== 'completed' && setWinner(m.id, 'blue')}
