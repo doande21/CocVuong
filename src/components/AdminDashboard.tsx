@@ -186,18 +186,24 @@ export default function AdminDashboard({ performances, matches, settings, onBack
                 <div key={m.id} className={`p-6 rounded-xl border ${settings?.activeId === m.id ? 'bg-red-900/20 border-red-500' : 'bg-slate-900 border-slate-800'}`}>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-8">
-                      <div className="text-center">
-                        <div className="w-16 h-16 rounded-full border-4 border-red-500 overflow-hidden mb-2">
+                      <div 
+                        className={`text-center cursor-pointer group transition-transform hover:scale-105 ${m.winner === 'red' ? 'opacity-100' : m.winner ? 'opacity-40' : ''}`}
+                        onClick={() => m.status !== 'completed' && setWinner(m.id, 'red')}
+                      >
+                        <div className={`w-16 h-16 rounded-full border-4 overflow-hidden mb-2 transition-all ${m.winner === 'red' ? 'border-yellow-500 ring-4 ring-yellow-500/20' : 'border-red-500 group-hover:border-red-400'}`}>
                           <img src={m.redCorner.photoUrl} alt={m.redCorner.name} className="w-full h-full object-cover" />
                         </div>
-                        <p className="font-bold">{m.redCorner.name}</p>
+                        <p className={`font-bold ${m.winner === 'red' ? 'text-yellow-500' : ''}`}>{m.redCorner.name}</p>
                       </div>
                       <span className="text-2xl font-black italic text-slate-700">VS</span>
-                      <div className="text-center">
-                        <div className="w-16 h-16 rounded-full border-4 border-blue-500 overflow-hidden mb-2">
+                      <div 
+                        className={`text-center cursor-pointer group transition-transform hover:scale-105 ${m.winner === 'blue' ? 'opacity-100' : m.winner ? 'opacity-40' : ''}`}
+                        onClick={() => m.status !== 'completed' && setWinner(m.id, 'blue')}
+                      >
+                        <div className={`w-16 h-16 rounded-full border-4 overflow-hidden mb-2 transition-all ${m.winner === 'blue' ? 'border-yellow-500 ring-4 ring-yellow-500/20' : 'border-blue-500 group-hover:border-blue-400'}`}>
                           <img src={m.blueCorner.photoUrl} alt={m.blueCorner.name} className="w-full h-full object-cover" />
                         </div>
-                        <p className="font-bold">{m.blueCorner.name}</p>
+                        <p className={`font-bold ${m.winner === 'blue' ? 'text-yellow-500' : ''}`}>{m.blueCorner.name}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
