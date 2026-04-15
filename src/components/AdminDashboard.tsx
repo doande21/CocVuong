@@ -15,31 +15,45 @@ interface AdminDashboardProps {
 export default function AdminDashboard({ performances, matches, settings, onBack }: AdminDashboardProps) {
   const [activeTab, setActiveTab] = useState<'forms' | 'combat' | 'settings'>('forms');
   const [newPerf, setNewPerf] = useState({ name: '', competitor: '' });
-  const [newMatch, setNewMatch] = useState({ redName: '', blueName: '' });
+  const [newMatch, setNewMatch] = useState({ redName: '', blueName: '', redPhoto: '', bluePhoto: '' });
 
   const addPerformance = async () => {
     if (!newPerf.name || !newPerf.competitor) return;
-    await addDoc(collection(db, 'performances'), {
-      ...newPerf,
-      scores: {},
-      averageScore: 0,
-      status: 'pending',
-      order: performances.length + 1,
-      createdAt: new Date().toISOString()
-    });
-    setNewPerf({ name: '', competitor: '' });
+    try {
+      await addDoc(collection(db, 'performances'), {
+        ...newPerf,
+        scores: {},
+        averageScore: 0,
+        status: 'pending',
+        order: performances.length + 1,
+        createdAt: new Date().toISOString()
+      });
+      setNewPerf({ name: '', competitor: '' });
+    } catch (error) {
+      console.error("Error adding performance:", error);
+    }
   };
 
   const addMatch = async () => {
     if (!newMatch.redName || !newMatch.blueName) return;
-    await addDoc(collection(db, 'matches'), {
-      redCorner: { name: newMatch.redName, photoUrl: `https://picsum.photos/seed/${newMatch.redName}/200` },
-      blueCorner: { name: newMatch.blueName, photoUrl: `https://picsum.photos/seed/${newMatch.blueName}/200` },
-      winner: null,
-      status: 'pending',
-      createdAt: new Date().toISOString()
-    });
-    setNewMatch({ redName: '', blueName: '' });
+    try {
+      await addDoc(collection(db, 'matches'), {
+        redCorner: { 
+          name: newMatch.redName, 
+          photoUrl: newMatch.redPhoto || `https://picsum.photos/seed/${newMatch.redName}/400` 
+        },
+        blueCorner: { 
+          name: newMatch.blueName, 
+          photoUrl: newMatch.bluePhoto || `https://picsum.photos/seed/${newMatch.blueName}/400` 
+        },
+        winner: null,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      });
+      setNewMatch({ redName: '', blueName: '', redPhoto: '', bluePhoto: '' });
+    } catch (error) {
+      console.error("Error adding match:", error);
+    }
   };
 
   const setLEDView = async (view: 'forms' | 'combat' | 'idle', id: string | null = null) => {
@@ -132,23 +146,39 @@ export default function AdminDashboard({ performances, matches, settings, onBack
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Plus className="w-5 h-5 text-red-500" /> Thêm trận đấu mới
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input 
-                  placeholder="Võ sĩ Đỏ" 
-                  value={newMatch.redName} 
-                  onChange={e => setNewMatch({...newMatch, redName: e.target.value})}
-                  className="bg-slate-800 border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 outline-none"
-                />
-                <input 
-                  placeholder="Võ sĩ Xanh" 
-                  value={newMatch.blueName} 
-                  onChange={e => setNewMatch({...newMatch, blueName: e.target.value})}
-                  className="bg-slate-800 border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                />
-                <button onClick={addMatch} className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-semibold transition-colors">
-                  Thêm
-                </button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="space-y-2">
+                  <input 
+                    placeholder="Tên võ sĩ Đỏ" 
+                    value={newMatch.redName} 
+                    onChange={e => setNewMatch({...newMatch, redName: e.target.value})}
+                    className="w-full bg-slate-800 border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 outline-none"
+                  />
+                  <input 
+                    placeholder="URL ảnh võ sĩ Đỏ (tùy chọn)" 
+                    value={newMatch.redPhoto} 
+                    onChange={e => setNewMatch({...newMatch, redPhoto: e.target.value})}
+                    className="w-full bg-slate-800 border-slate-700 rounded-lg px-4 py-2 text-xs outline-none"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <input 
+                    placeholder="Tên võ sĩ Xanh" 
+                    value={newMatch.blueName} 
+                    onChange={e => setNewMatch({...newMatch, blueName: e.target.value})}
+                    className="w-full bg-slate-800 border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                  />
+                  <input 
+                    placeholder="URL ảnh võ sĩ Xanh (tùy chọn)" 
+                    value={newMatch.bluePhoto} 
+                    onChange={e => setNewMatch({...newMatch, bluePhoto: e.target.value})}
+                    className="w-full bg-slate-800 border-slate-700 rounded-lg px-4 py-2 text-xs outline-none"
+                  />
+                </div>
               </div>
+              <button onClick={addMatch} className="w-full bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg font-semibold transition-colors">
+                Tạo trận đấu
+              </button>
             </div>
 
             <div className="grid gap-4">
